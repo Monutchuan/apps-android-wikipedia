@@ -453,16 +453,13 @@ public class PageFragment extends Fragment implements BackPressedHandler, Commun
             }
 
             public void onPageFinished(WebView view, String url) {
-                bridge.evaluateImmediate("(function() { return (typeof pcs !== 'undefined'); })();", pcsExists -> {
+                bridge.evaluateImmediate(JavaScriptActionHandler.parsoidShim(view.getContext()), shimResult -> {
                     if (!isAdded()) {
                         return;
                     }
-                    // TODO: This is a bit of a hack: If PCS does not exist in the current page, then
-                    // it's implied that this page was loaded via Mobile Web (e.g. the Main Page) and
-                    // doesn't support PCS, meaning that we will never receive the `setup` event that
-                    // tells us the page is finished loading. In such a case, we must infer that the
-                    // page has now loaded and trigger the remaining logic ourselves.
-                    if (!"true".equals(pcsExists)) {
+                    // The shim sends the `setup` and `final_setup` events itself. If it could not be
+                    // installed (e.g. this is an error page), infer that the page is ready instead.
+                    if (!"true".equals(shimResult)) {
                         onPageSetupEvent();
                         bridge.onPcsReady();
                         bridge.execute(JavaScriptActionHandler.mobileWebChromeShim());
@@ -477,7 +474,8 @@ public class PageFragment extends Fragment implements BackPressedHandler, Commun
 
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                if (!request.getUrl().toString().contains(RestService.PAGE_HTML_ENDPOINT)) {
+                if (!request.getUrl().toString().contains(RestService.PAGE_HTML_ENDPOINT)
+                        && !request.getUrl().toString().contains(RestService.PAGE_HTML_ENDPOINT_PARSOID)) {
                     // If the request is anything except the main mobile-html content request, then
                     // don't worry about any errors and let the WebView deal with it.
                     return;

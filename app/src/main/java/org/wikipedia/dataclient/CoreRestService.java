@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface CoreRestService {
-    String CORE_REST_API_PREFIX = "/w/rest.php/v1/";
+    String CORE_REST_API_PREFIX = "/rest.php/v1/";
 
     @GET("revision/{oldRev}/compare/{newRev}")
     @NonNull

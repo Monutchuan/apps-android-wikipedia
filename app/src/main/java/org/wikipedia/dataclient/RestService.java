@@ -43,6 +43,10 @@ public interface RestService {
     String PAGE_HTML_ENDPOINT = "page/mobile-html/";
     String PAGE_HTML_PREVIEW_ENDPOINT = "transform/wikitext/to/mobile-html/";
 
+    // Parsoid HTML endpoint of a plain MediaWiki install (no RESTBase).
+    String PAGE_HTML_ENDPOINT_PARSOID = "/rest.php/v1/page/";
+    String PAGE_HTML_SUFFIX = "/html";
+
     /**
      * Gets a page summary for a given title -- for link previews
      *

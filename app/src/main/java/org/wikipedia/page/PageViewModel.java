@@ -77,7 +77,8 @@ public class PageViewModel {
     }
 
     public boolean shouldLoadAsMobileWeb() {
-        return title != null && title.isMainPage();
+        // All pages are rendered from Parsoid HTML, so we never load the Mobile Web skin.
+        return false;
     }
 
     public CacheControl getCacheControl() {

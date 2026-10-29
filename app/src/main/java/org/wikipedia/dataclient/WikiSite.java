@@ -41,7 +41,9 @@ import org.wikipedia.util.UriUtil;
  */
 public class WikiSite implements Parcelable {
     public static final String DEFAULT_SCHEME = "https";
-    private static String DEFAULT_BASE_URL;
+    // Self-hosted MediaWiki instance used when no base url is configured.
+    public static final String CUSTOM_BASE_URL = "https://wiki.mtcteam.cn";
+    private static String DEFAULT_BASE_URL = CUSTOM_BASE_URL;
 
     public static final Parcelable.Creator<WikiSite> CREATOR = new Parcelable.Creator<WikiSite>() {
         @Override
@@ -64,11 +66,15 @@ public class WikiSite implements Parcelable {
     }
 
     public static void setDefaultBaseUrl(@NonNull String url) {
-        DEFAULT_BASE_URL = TextUtils.isEmpty(url) ? Service.WIKIPEDIA_URL : url;
+        DEFAULT_BASE_URL = TextUtils.isEmpty(url) ? CUSTOM_BASE_URL : url;
     }
 
     public static WikiSite forLanguageCode(@NonNull String languageCode) {
         Uri uri = ensureScheme(Uri.parse(DEFAULT_BASE_URL));
+        if (!DEFAULT_BASE_URL.contains("wikipedia.org")) {
+            // A self-hosted wiki has no language subdomains, so ignore the language code.
+            return new WikiSite(uri.getAuthority(), "");
+        }
         return new WikiSite((languageCode.isEmpty()
                 ? "" : (languageCodeToSubdomain(languageCode) + ".")) + uri.getAuthority(),
                 languageCode);

@@ -91,12 +91,10 @@ public class CommunicationBridge {
         isMetadataReady = false;
         pendingJSMessages.clear();
         pendingEvals.clear();
-        if (communicationBridgeListener.getModel().shouldLoadAsMobileWeb()) {
-            communicationBridgeListener.getWebView().loadUrl(pageTitle.getMobileUri());
-        } else {
-            communicationBridgeListener.getWebView().loadUrl(ServiceFactory.getRestBasePath(pageTitle.getWikiSite())
-                    + RestService.PAGE_HTML_ENDPOINT + UriUtil.encodeURL(pageTitle.getPrefixedText()));
-        }
+        communicationBridgeListener.getWebView().loadUrl(pageTitle.getWikiSite().url()
+                + RestService.PAGE_HTML_ENDPOINT_PARSOID
+                + UriUtil.encodeURL(pageTitle.getPrefixedText())
+                + RestService.PAGE_HTML_SUFFIX);
     }
 
     public void cleanup() {

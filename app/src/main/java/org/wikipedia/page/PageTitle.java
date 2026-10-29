@@ -247,7 +247,7 @@ public class PageTitle implements Parcelable {
     public String getUriForAction(String action) {
         try {
             return String.format(
-                    "%1$s://%2$s/w/index.php?title=%3$s&action=%4$s",
+                    "%1$s://%2$s/index.php?title=%3$s&action=%4$s",
                     getWikiSite().scheme(),
                     getWikiSite().authority(),
                     URLEncoder.encode(getPrefixedText(), "utf-8"),

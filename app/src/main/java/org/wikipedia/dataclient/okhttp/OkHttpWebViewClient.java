@@ -126,7 +126,9 @@ public abstract class OkHttpWebViewClient extends WebViewClient {
         if (getModel().getCurEntry() != null && !TextUtils.isEmpty(getModel().getCurEntry().getReferrer())) {
             builder.header("Referer", getModel().getCurEntry().getReferrer());
         }
-        if (request.getUrl().getPath() != null && request.getUrl().getPath().contains(RestService.PAGE_HTML_ENDPOINT)) {
+        if (request.getUrl().getPath() != null
+                && (request.getUrl().getPath().contains(RestService.PAGE_HTML_ENDPOINT)
+                || request.getUrl().getPath().contains(RestService.PAGE_HTML_ENDPOINT_PARSOID))) {
             builder.header("X-Analytics", "pageview=1");
         }
         return builder;

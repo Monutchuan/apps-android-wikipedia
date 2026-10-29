@@ -146,6 +146,20 @@ object JavaScriptActionHandler {
                 "})();"
     }
 
+    /**
+     * Injects the PCS compatibility shim needed to render plain Parsoid HTML (i.e. a wiki without
+     * RESTBase). Returns `true` when the shim was installed successfully.
+     */
+    @JvmStatic
+    fun parsoidShim(context: Context): String {
+        return try {
+            val js = context.assets.open("parsoid-shim.js").use { it.bufferedReader().readText() }
+            "(function() {$js;return true;})()"
+        } catch (e: Exception) {
+            "(function(){return false;})()"
+        }
+    }
+
     @JvmStatic
     fun getElementAtPosition(x: Int, y: Int): String {
         return "(function() {" +
